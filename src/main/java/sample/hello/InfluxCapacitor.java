@@ -12,21 +12,22 @@ public class InfluxCapacitor extends UntypedActor{
 
 	
 	void dbtest(){
-		InfluxDB influxDB = InfluxDBFactory.connect("http://178.62.74.225:8083/", "root", "root");
+		System.out.println("DB test");
+		
+		InfluxDB influxDB = InfluxDBFactory.connect("http://localhost:8086", "root", "root");
 
-		//influxDB.createDatabase("poo");
+		//influxDB.createDatabase("testerDB");
 
-		Serie serie1 = new Serie.Builder("serie2Name")
-		            .columns("column1", "column2")
+		Serie serie1 = new Serie.Builder("farty6")
+		            .columns("testcolumn1", "testcolumn2")
 		            .values(System.currentTimeMillis(), 1)
 		            .values(System.currentTimeMillis(), 2)
 		            .build();
-		Serie serie2 = new Serie.Builder("serie2Name")
-		            .columns("column1", "column2")
-		            .values(System.currentTimeMillis(), 1)
-		            .values(System.currentTimeMillis(), 2)
-		            .build();
-		influxDB.write("poo", TimeUnit.MILLISECONDS, serie1, serie2);
+		try {
+		influxDB.write("testerDB", TimeUnit.MILLISECONDS, serie1);
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 	}
 
 	@Override
