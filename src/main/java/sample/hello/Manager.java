@@ -2,7 +2,7 @@ package sample.hello;
 
 import java.util.HashMap;
 
-import messages.InitInfo;
+import messages.makeBallot;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
 import akka.actor.ActorRef;
@@ -27,6 +27,9 @@ public class Manager extends UntypedActor {
 	  //final ActorRef mongoloid = getContext().actorOf(Props.create(Mongoloid.class));
 	  final ActorRef idb = getContext().actorOf(Props.create(InfluxCapacitor.class));
 	  idb.tell("dbtest", getSelf());
+	  makeBallot mkBal = new makeBallot("A", "a vote for a test", "testVote", "Pizza", "Pasta");
+	  idb.tell(mkBal, getSelf());
+	  //System.out.println(System.currentTimeMillis());
 	  //*****************************************all that needs to be pre started is the overall HTTP server and mongo manager*********************************
 	  
 	  
@@ -61,23 +64,7 @@ public class Manager extends UntypedActor {
   @Override
   public void onReceive(Object msg) {
 	  
-	if(msg instanceof Long){
-		//its either a create or destroy
-		if ((Long) msg < 86400001l){
-			//if its under 1 day in milliseconds, then its a make request from the Manager
-			System.out.println("Make request, casting new actor");
-			
-			ActorRef actorRef = getContext().actorOf(Props.create(BallotBox.class));
-			Long t = System.currentTimeMillis();
-			activeBallotsList.put(t, actorRef);
-			InitInfo init = new InitInfo((Long) msg, t); //to do this better just give it the ballet object created from here
-			actorRef.tell(init, null);
-		} else {
-			//in this case as the message is the start time of a ballot, its a destroy message so remove hashmap entry
-			activeBallotsList.remove((Long) msg);
-			System.out.println("Manager forgets about an actor, Bravo");
-		}
-	  }
+
       unhandled(msg);
   }
   
