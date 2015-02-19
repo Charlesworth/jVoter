@@ -2,6 +2,7 @@ package sample.hello;
 
 import java.util.HashMap;
 
+import messages.get;
 import messages.makeBallot;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
@@ -26,9 +27,11 @@ public class Manager extends UntypedActor {
     
 	  //final ActorRef mongoloid = getContext().actorOf(Props.create(Mongoloid.class));
 	  final ActorRef idb = getContext().actorOf(Props.create(InfluxCapacitor.class));
-	  idb.tell("dbtest", getSelf());
-	  makeBallot mkBal = new makeBallot("A", "a vote for a test", "testVote", "Pizza", "Pasta");
-	  idb.tell(mkBal, getSelf());
+	  //idb.tell("dbtest", getSelf());
+	  //makeBallot mkBal = new makeBallot("A", "a vote for a test", "testVote", "Pizza", "Pasta");
+	  //idb.tell(mkBal, getSelf());
+	  get test1 = new get ("1424381388948A", "both");
+	  idb.tell(test1, getSelf());
 	  //System.out.println(System.currentTimeMillis());
 	  //*****************************************all that needs to be pre started is the overall HTTP server and mongo manager*********************************
 	  
